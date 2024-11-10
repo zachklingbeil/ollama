@@ -1,0 +1,51 @@
+services:
+    webui: # https://docs.openwebui.com/getting-started/env-configuration/
+        container_name: webui
+        image: ghcr.io/open-webui/open-webui:main
+        expose:
+            - ${WEBUI_PORT}
+        env_file:
+            - .env
+        volumes:
+            - webui:/app/backend/data
+        networks:
+            - timefactory
+        pull_policy: always
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          capabilities: ['gpu']
+                          count: all
+        restart: unless-stopped
+
+    ollama:
+        container_name: ollama
+        image: ollama/ollama
+        volumes:
+            - ollama:/root/.ollama
+        networks:
+            - timefactory
+        expose:
+            - ${OLLAMA_PORT}
+        env_file:
+            - .env
+        restart: unless-stopped
+        pull_policy: always
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          capabilities: ['gpu']
+                          count: all
+
+networks:
+    timefactory:
+        external: true
+volumes:
+    webui:
+        external: true
+    ollama:
+        external: true
