@@ -7,7 +7,7 @@ services:
         env_file:
             - .env
         volumes:
-            - webui:/app/backend/data
+            - ollama:/app/backend/data
         networks:
             - timefactory
         pull_policy: always
@@ -45,7 +45,5 @@ networks:
     timefactory:
         external: true
 volumes:
-    webui:
-        external: true
     ollama:
         external: true
